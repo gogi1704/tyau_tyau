@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite не поддерживает нативные enum в Prisma — значения ограничиваются на уровне API
+// (Gender: MALE|FEMALE, AgeGroup: PUPPY|ADULT, Goal: WALK|MATE, District: см. src/lib/districts.ts).
+
+model User {
+  id         String   @id @default(cuid())
+  telegramId String   @unique
+  username   String?
+  firstName  String?
+  createdAt  DateTime @default(now())
+
+  dogProfile DogProfile?
+}
+
+model DogProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+
+  name      String
+  breed     String
+  photoUrl  String?
+  gender    String
+  ageGroup  String
+  district  String
+  goal      String
+  createdAt DateTime @default(now())
+
+  walkSessions   WalkSession[]
+  likesGiven     Like[]        @relation("LikesFrom")
+  likesReceived  Like[]        @relation("LikesTo")
+  matchesAsA     Match[]       @relation("MatchDogA")
+  matchesAsB     Match[]       @relation("MatchDogB")
+  meetups        Meetup[]
+  participations MeetupParticipant[]
+  posts          Post[]
+  following      Follow[]      @relation("FollowerDog")
+  followers      Follow[]      @relation("FollowingDog")
+  createdGroups    Group[]
+  groupMemberships GroupMember[]
+}
+
+model Post {
+  id           String     @id @default(cuid())
+  dogProfileId String
+  dogProfile   DogProfile @relation(fields: [dogProfileId], references: [id])
+  groupId      String?
+  group        Group?     @relation(fields: [groupId], references: [id])
+  photoUrl     String?
+  caption      String?
+  createdAt    DateTime   @default(now())
+
+  @@index([createdAt])
+}
+
+model Group {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  photoUrl     String?
+  creatorDogId String
+  creatorDog   DogProfile @relation(fields: [creatorDogId], references: [id])
+  createdAt    DateTime @default(now())
+
+  members GroupMember[]
+  posts   Post[]
+}
+
+model GroupMember {
+  id           String     @id @default(cuid())
+  groupId      String
+  group        Group      @relation(fields: [groupId], references: [id])
+  dogProfileId String
+  dogProfile   DogProfile @relation(fields: [dogProfileId], references: [id])
+  joinedAt     DateTime   @default(now())
+
+  @@unique([groupId, dogProfileId])
+}
+
+model Follow {
+  id             String     @id @default(cuid())
+  followerDogId  String
+  followerDog    DogProfile @relation("FollowerDog", fields: [followerDogId], references: [id])
+  followingDogId String
+  followingDog   DogProfile @relation("FollowingDog", fields: [followingDogId], references: [id])
+  createdAt      DateTime   @default(now())
+
+  @@unique([followerDogId, followingDogId])
+}
+
+model WalkSession {
+  id           String     @id @default(cuid())
+  dogProfileId String
+  dogProfile   DogProfile @relation(fields: [dogProfileId], references: [id])
+  lat          Float
+  lng          Float
+  startedAt    DateTime   @default(now())
+  expiresAt    DateTime
+
+  @@index([expiresAt])
+}
+
+model Like {
+  id         String     @id @default(cuid())
+  fromDogId  String
+  fromDog    DogProfile @relation("LikesFrom", fields: [fromDogId], references: [id])
+  toDogId    String
+  toDog      DogProfile @relation("LikesTo", fields: [toDogId], references: [id])
+  createdAt  DateTime   @default(now())
+
+  @@unique([fromDogId, toDogId])
+}
+
+model Match {
+  id        String     @id @default(cuid())
+  dogAId    String
+  dogA      DogProfile @relation("MatchDogA", fields: [dogAId], references: [id])
+  dogBId    String
+  dogB      DogProfile @relation("MatchDogB", fields: [dogBId], references: [id])
+  createdAt DateTime   @default(now())
+
+  @@unique([dogAId, dogBId])
+}
+
+model Meetup {
+  id            String   @id @default(cuid())
+  organizerDogId String
+  organizerDog  DogProfile @relation(fields: [organizerDogId], references: [id])
+
+  title         String
+  description   String
+  district      String
+  placeName     String
+  lat           Float
+  lng           Float
+  scheduledAt   DateTime
+  chatLink      String?
+  createdAt     DateTime @default(now())
+
+  participants  MeetupParticipant[]
+}
+
+model MeetupParticipant {
+  id           String     @id @default(cuid())
+  meetupId     String
+  meetup       Meetup     @relation(fields: [meetupId], references: [id])
+  dogProfileId String
+  dogProfile   DogProfile @relation(fields: [dogProfileId], references: [id])
+  joinedAt     DateTime   @default(now())
+
+  @@unique([meetupId, dogProfileId])
+}
