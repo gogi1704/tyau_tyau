@@ -1,5 +1,0 @@
-# Нет домена? Используйте <IP-сервера>.sslip.io, например 203.0.113.42.sslip.io —
-# это публичный DNS без регистрации, Caddy получит для него настоящий HTTPS-сертификат.
-your-domain.example.com {
-    reverse_proxy frontend:80
-}
