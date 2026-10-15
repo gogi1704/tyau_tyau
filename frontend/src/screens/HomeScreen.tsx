@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion, type PanInfo, type Variants } from "framer-motion";
-import { Dog, Heart, PawPrint } from "lucide-react";
+import { CalendarDays, Dog, Heart } from "lucide-react";
 import { api } from "../lib/api";
 import { haptic } from "../lib/telegram";
 import PostCard from "../components/PostCard";
@@ -12,8 +12,17 @@ import type { FeedScope, Post } from "../lib/types";
 
 function TyauLogo() {
   return (
-    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-forest-700 text-white shadow-soft">
-      <PawPrint size={19} strokeWidth={2.3} />
+    <div className="flex h-10 items-center rounded-2xl bg-forest-700 px-4 shadow-soft">
+      <span
+        className="text-lg leading-none tracking-wide text-white"
+        style={{
+          fontFamily: "'Baloo 2', cursive",
+          fontWeight: 700,
+          textShadow: "0 1.5px 0 rgba(0,0,0,0.22)",
+        }}
+      >
+        Тяу-Тяу
+      </span>
     </div>
   );
 }
@@ -30,12 +39,15 @@ function MatchIcon() {
   );
 }
 
-function PackIcon() {
+function MeetupIcon() {
   return (
     <span className="relative flex h-5 w-5 items-center justify-center">
-      <Dog size={12} strokeWidth={2.2} className="absolute left-0 top-0.5 opacity-50" />
-      <Dog size={14} strokeWidth={2.2} className="relative z-10" />
-      <Dog size={12} strokeWidth={2.2} className="absolute right-0 top-1 scale-x-[-1] opacity-50" />
+      <CalendarDays size={18} strokeWidth={2.1} />
+      <Dog
+        size={11}
+        strokeWidth={2.4}
+        className="absolute -bottom-1 -right-1.5 rounded-full bg-white text-forest-700 dark:bg-ink-800 dark:text-forest-300"
+      />
     </span>
   );
 }
@@ -91,7 +103,7 @@ export default function HomeScreen() {
             className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-soft dark:bg-ink-800"
             aria-label="Встречи"
           >
-            <PackIcon />
+            <MeetupIcon />
           </Link>
         </div>
       </div>
