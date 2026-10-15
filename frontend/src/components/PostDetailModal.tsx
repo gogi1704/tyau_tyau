@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Eye, Loader2, Trash2, X } from "lucide-react";
 import { api } from "../lib/api";
 import DogAvatar from "./DogAvatar";
+import PhotoViewer from "./PhotoViewer";
 import type { Post } from "../lib/types";
 
 const formatter = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
@@ -19,6 +20,7 @@ export default function PostDetailModal({
 }) {
   const queryClient = useQueryClient();
   const [viewsCount, setViewsCount] = useState(post.viewsCount);
+  const [fullScreen, setFullScreen] = useState(false);
 
   useEffect(() => {
     api.viewPost(post.id).then(({ viewsCount }) => {
@@ -52,7 +54,11 @@ export default function PostDetailModal({
           exit={{ scale: 0.9, opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
         >
-          {post.photoUrl && <img src={post.photoUrl} alt="" className="max-h-[50vh] w-full object-cover" />}
+          {post.photoUrl && (
+            <button onClick={() => setFullScreen(true)} className="block w-full">
+              <img src={post.photoUrl} alt="" className="max-h-[50vh] w-full object-cover" />
+            </button>
+          )}
 
           <div className="p-4">
             <div className="flex items-start justify-between gap-3">
@@ -88,6 +94,10 @@ export default function PostDetailModal({
           </div>
         </motion.div>
       </motion.div>
+
+      {fullScreen && post.photoUrl && (
+        <PhotoViewer src={post.photoUrl} onClose={() => setFullScreen(false)} />
+      )}
     </AnimatePresence>
   );
 }
