@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Trash2, X } from "lucide-react";
+import { Eye, Loader2, Trash2, X } from "lucide-react";
 import { api } from "../lib/api";
 import DogAvatar from "./DogAvatar";
 import type { Post } from "../lib/types";
@@ -17,6 +18,15 @@ export default function PostDetailModal({
   onClose: () => void;
 }) {
   const queryClient = useQueryClient();
+  const [viewsCount, setViewsCount] = useState(post.viewsCount);
+
+  useEffect(() => {
+    api.viewPost(post.id).then(({ viewsCount }) => {
+      setViewsCount(viewsCount);
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [post.id]);
 
   const deleteMutation = useMutation({
     mutationFn: () => api.deletePost(post.id),
@@ -50,7 +60,12 @@ export default function PostDetailModal({
                 <DogAvatar photoUrl={post.dog.photoUrl} size={32} />
                 <div>
                   <p className="text-sm font-semibold text-ink-900 dark:text-white">{post.dog.name}</p>
-                  <p className="text-xs text-ink-400">{formatter.format(new Date(post.createdAt))}</p>
+                  <p className="flex items-center gap-2 text-xs text-ink-400">
+                    {formatter.format(new Date(post.createdAt))}
+                    <span className="flex items-center gap-1">
+                      <Eye size={12} /> {viewsCount}
+                    </span>
+                  </p>
                 </div>
               </div>
               <button onClick={onClose} className="text-ink-400 dark:text-ink-300">

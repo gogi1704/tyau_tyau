@@ -46,6 +46,7 @@ export interface Post {
   id: string;
   photoUrl: string | null;
   caption: string | null;
+  viewsCount: number;
   createdAt: string;
   dog: Pick<DogProfile, "id" | "name" | "photoUrl">;
   group: { id: string; name: string; photoUrl: string | null } | null;

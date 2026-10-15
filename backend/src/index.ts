@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import path from "path";
 import fs from "fs";
 import profileRouter from "./routes/profile";
 import presenceRouter from "./routes/presence";
@@ -11,16 +10,16 @@ import postsRouter from "./routes/posts";
 import followRouter from "./routes/follow";
 import groupsRouter from "./routes/groups";
 import { startBot } from "./bot";
+import { UPLOADS_DIR } from "./lib/upload";
 
 const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 
-const uploadsDir = path.join(__dirname, "..", "uploads");
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static(uploadsDir));
+app.use("/uploads", express.static(UPLOADS_DIR));
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/profile", profileRouter);

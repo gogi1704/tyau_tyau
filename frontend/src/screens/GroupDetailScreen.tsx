@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Loader2, Plus, Users } from "lucide-react";
 import { api } from "../lib/api";
 import GroupJoinButton from "../components/GroupJoinButton";
-import PostGrid from "../components/PostGrid";
+import PostCard from "../components/PostCard";
 import PostDetailModal from "../components/PostDetailModal";
 import CreatePostModal from "../components/CreatePostModal";
 import type { Post } from "../lib/types";
@@ -76,11 +76,15 @@ export default function GroupDetailScreen() {
         )}
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 px-5">
         {posts.length === 0 ? (
-          <p className="px-5 text-center text-sm text-ink-400">В группе пока нет постов</p>
+          <p className="text-center text-sm text-ink-400">В группе пока нет постов</p>
         ) : (
-          <PostGrid posts={posts} onSelect={setSelectedPost} />
+          <div className="space-y-3">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} onClick={() => setSelectedPost(post)} />
+            ))}
+          </div>
         )}
       </div>
 

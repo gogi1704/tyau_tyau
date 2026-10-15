@@ -5,7 +5,7 @@ import { ArrowLeft, Loader2, MessageCircle } from "lucide-react";
 import { api } from "../lib/api";
 import DogAvatar from "../components/DogAvatar";
 import FollowButton from "../components/FollowButton";
-import PostGrid from "../components/PostGrid";
+import PostCard from "../components/PostCard";
 import PostDetailModal from "../components/PostDetailModal";
 import { districtLabel } from "../data/districts";
 import { openOwnerChat } from "../lib/telegram";
@@ -79,11 +79,15 @@ export default function PublicProfileScreen() {
         </button>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 px-5">
         {posts.length === 0 ? (
-          <p className="px-5 text-center text-sm text-ink-400">Здесь пока нет постов</p>
+          <p className="text-center text-sm text-ink-400">Здесь пока нет постов</p>
         ) : (
-          <PostGrid posts={posts} onSelect={setSelectedPost} />
+          <div className="space-y-3">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} onClick={() => setSelectedPost(post)} />
+            ))}
+          </div>
         )}
       </div>
 

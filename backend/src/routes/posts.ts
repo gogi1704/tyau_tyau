@@ -11,6 +11,7 @@ function serializePost(p: any) {
     id: p.id,
     photoUrl: p.photoUrl,
     caption: p.caption,
+    viewsCount: p.viewsCount,
     createdAt: p.createdAt,
     dog: { id: p.dogProfile.id, name: p.dogProfile.name, photoUrl: p.dogProfile.photoUrl },
     group: p.group ? { id: p.group.id, name: p.group.name, photoUrl: p.group.photoUrl } : null,
@@ -103,6 +104,19 @@ router.post("/", telegramAuth, upload.single("photo"), async (req, res) => {
   });
 
   res.json({ post: serializePost(post) });
+});
+
+router.post("/:id/view", telegramAuth, async (req, res) => {
+  try {
+    const post = await prisma.post.update({
+      where: { id: req.params.id },
+      data: { viewsCount: { increment: 1 } },
+      select: { viewsCount: true },
+    });
+    res.json({ viewsCount: post.viewsCount });
+  } catch {
+    res.status(404).json({ error: "not_found" });
+  }
 });
 
 router.delete("/:id", telegramAuth, async (req, res) => {

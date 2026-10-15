@@ -52,6 +52,8 @@ export const api = {
 
   deletePost: (id: string) => request<{ ok: true }>(`/posts/${id}`, { method: "DELETE" }),
 
+  viewPost: (id: string) => request<{ viewsCount: number }>(`/posts/${id}/view`, { method: "POST" }),
+
   follow: (dogId: string) => request<{ ok: true }>(`/follow/${dogId}`, { method: "POST" }),
 
   unfollow: (dogId: string) => request<{ ok: true }>(`/follow/${dogId}`, { method: "DELETE" }),
