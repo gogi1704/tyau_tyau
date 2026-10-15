@@ -4,13 +4,13 @@ import { haptic } from "../lib/telegram";
 import { useAppStore } from "../lib/store";
 
 const LEFT_TABS = [
-  { to: "/", label: "Главная", icon: Home },
-  { to: "/map", label: "Карта", icon: MapPin },
+  { to: "/", label: "Хвосты", icon: Home },
+  { to: "/map", label: "Кентюрики", icon: MapPin },
 ];
 
 const RIGHT_TABS = [
   { to: "/chats", label: "Чаты", icon: MessageCircle },
-  { to: "/profile", label: "Профиль", icon: User },
+  { to: "/profile", label: "Будка", icon: User },
 ];
 
 const itemClasses = (isActive: boolean) =>
