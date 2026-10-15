@@ -4,14 +4,17 @@ import { Link } from "react-router-dom";
 import { Flame, CalendarHeart } from "lucide-react";
 import { api } from "../lib/api";
 import PostCard from "../components/PostCard";
+import PostDetailModal from "../components/PostDetailModal";
 import EmptyState from "../components/EmptyState";
-import type { FeedScope } from "../lib/types";
+import type { FeedScope, Post } from "../lib/types";
 
 export default function HomeScreen() {
   const [scope, setScope] = useState<FeedScope>("users");
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const { data: profileData } = useQuery({ queryKey: ["profile", "me"], queryFn: api.getMyProfile });
   const hasProfile = Boolean(profileData?.dogProfile);
+  const ownDogId = profileData?.dogProfile?.id;
 
   const { data, isLoading } = useQuery({
     queryKey: ["posts", "feed", scope],
@@ -95,12 +98,20 @@ export default function HomeScreen() {
             ) : (
               <div className="space-y-3">
                 {posts.map((p) => (
-                  <PostCard key={p.id} post={p} />
+                  <PostCard key={p.id} post={p} onClick={() => setSelectedPost(p)} />
                 ))}
               </div>
             )}
           </div>
         </>
+      )}
+
+      {selectedPost && (
+        <PostDetailModal
+          post={selectedPost}
+          canDelete={selectedPost.dog.id === ownDogId}
+          onClose={() => setSelectedPost(null)}
+        />
       )}
     </div>
   );
