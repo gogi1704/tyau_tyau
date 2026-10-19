@@ -37,6 +37,17 @@ router.post("/stop", telegramAuth, async (req, res) => {
 
 router.get("/active", telegramAuth, async (req, res) => {
   const dog = await getOwnDogProfile(req.telegramUser!.id);
+  const scope = req.query.scope === "friends" ? "friends" : "all";
+
+  let allowedDogIds: Set<string> | null = null;
+  if (scope === "friends") {
+    if (!dog) return res.json({ points: [] });
+    const follows = await prisma.follow.findMany({
+      where: { followerDogId: dog.id },
+      select: { followingDogId: true },
+    });
+    allowedDogIds = new Set([dog.id, ...follows.map((f) => f.followingDogId)]);
+  }
 
   const sessions = await prisma.walkSession.findMany({
     where: { expiresAt: { gt: new Date() } },
@@ -48,6 +59,7 @@ router.get("/active", telegramAuth, async (req, res) => {
   const points = [];
   for (const s of sessions) {
     if (seen.has(s.dogProfileId)) continue;
+    if (allowedDogIds && !allowedDogIds.has(s.dogProfileId)) continue;
     seen.add(s.dogProfileId);
     points.push({
       sessionId: s.id,

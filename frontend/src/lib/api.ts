@@ -7,6 +7,7 @@ import type {
   Meetup,
   PersonSummary,
   Post,
+  PresenceScope,
   ProfileStats,
   PublicProfile,
   WalkPoint,
@@ -76,7 +77,8 @@ export const api = {
 
   stopPresence: () => request<{ ok: true }>("/presence/stop", { method: "POST" }),
 
-  getActivePresence: () => request<{ points: WalkPoint[] }>("/presence/active"),
+  getActivePresence: (scope: PresenceScope) =>
+    request<{ points: WalkPoint[] }>(`/presence/active?scope=${scope}`),
 
   searchCandidates: (params: { district?: string; breed?: string; goal?: string }) => {
     const qs = new URLSearchParams(Object.entries(params).filter(([, v]) => v) as string[][]);

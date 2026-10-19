@@ -66,6 +66,7 @@ export interface Group {
 export type PersonSummary = DogProfile & { isFollowedByMe: boolean };
 
 export type FeedScope = "users" | "groups";
+export type PresenceScope = "friends" | "all";
 
 export interface PublicProfile {
   dogProfile: DogProfile;

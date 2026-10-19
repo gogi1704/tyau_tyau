@@ -8,6 +8,7 @@ import { haptic } from "../lib/telegram";
 import PostCard from "../components/PostCard";
 import PostDetailModal from "../components/PostDetailModal";
 import EmptyState from "../components/EmptyState";
+import SegmentedToggle from "../components/SegmentedToggle";
 import type { FeedScope, Post } from "../lib/types";
 
 function TyauLogo() {
@@ -122,31 +123,15 @@ export default function HomeScreen() {
         </div>
       ) : (
         <>
-          <div className="relative mx-5 mt-5 grid grid-cols-2 rounded-full bg-ink-100 p-1 dark:bg-ink-800">
-            <motion.div
-              className="absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-full bg-forest-700 shadow-soft"
-              animate={{ x: scope === "groups" ? "100%" : "0%" }}
-              transition={{ type: "spring", stiffness: 500, damping: 36 }}
-            />
-            <button
-              type="button"
-              onClick={() => switchScope("users")}
-              className={`relative z-10 rounded-full py-2.5 text-sm font-semibold transition-colors ${
-                scope === "users" ? "text-white" : "text-ink-500 dark:text-ink-300"
-              }`}
-            >
-              Пользователи
-            </button>
-            <button
-              type="button"
-              onClick={() => switchScope("groups")}
-              className={`relative z-10 rounded-full py-2.5 text-sm font-semibold transition-colors ${
-                scope === "groups" ? "text-white" : "text-ink-500 dark:text-ink-300"
-              }`}
-            >
-              Группы
-            </button>
-          </div>
+          <SegmentedToggle
+            className="mx-5 mt-5"
+            value={scope}
+            onChange={switchScope}
+            options={[
+              { value: "users", label: "Пользователи" },
+              { value: "groups", label: "Группы" },
+            ]}
+          />
 
           <motion.div className="mt-5 overflow-hidden px-5" onPanEnd={handlePanEnd}>
             <AnimatePresence mode="wait" custom={direction} initial={false}>
