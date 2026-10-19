@@ -3,7 +3,9 @@ import type {
   DogProfile,
   FeedScope,
   Group,
+  DosageUnit,
   MatchInfo,
+  Medication,
   Meetup,
   PersonSummary,
   Post,
@@ -109,4 +111,17 @@ export const api = {
   joinMeetup: (id: string) => request<{ meetup: Meetup }>(`/meetups/${id}/join`, { method: "POST" }),
 
   leaveMeetup: (id: string) => request<{ meetup: Meetup }>(`/meetups/${id}/leave`, { method: "POST" }),
+
+  getMedications: () => request<{ medications: Medication[] }>("/medications"),
+
+  addMedication: (data: {
+    name: string;
+    dosageAmount: number;
+    dosageUnit: DosageUnit;
+    frequencyHours?: number | null;
+    startAt?: string | null;
+    reminderEnabled?: boolean;
+  }) => request<{ medication: Medication }>("/medications", { method: "POST", body: JSON.stringify(data) }),
+
+  deleteMedication: (id: string) => request<{ ok: true }>(`/medications/${id}`, { method: "DELETE" }),
 };

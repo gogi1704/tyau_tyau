@@ -7,6 +7,7 @@ import DogAvatar from "../components/DogAvatar";
 import ProfileForm from "../components/ProfileForm";
 import ProfileMenu from "../components/ProfileMenu";
 import EditProfileModal from "../components/EditProfileModal";
+import MedicalCardModal from "../components/MedicalCardModal";
 import CreatePostModal from "../components/CreatePostModal";
 import PostCard from "../components/PostCard";
 import PostDetailModal from "../components/PostDetailModal";
@@ -19,6 +20,7 @@ export default function ProfileScreen() {
   const stats = data?.stats ?? null;
 
   const [editing, setEditing] = useState(false);
+  const [medicalOpen, setMedicalOpen] = useState(false);
   const [creatingPost, setCreatingPost] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
@@ -60,7 +62,7 @@ export default function ProfileScreen() {
             </p>
           </div>
         </div>
-        <ProfileMenu onEdit={() => setEditing(true)} />
+        <ProfileMenu onEdit={() => setEditing(true)} onMedical={() => setMedicalOpen(true)} />
       </div>
 
       {stats && (
@@ -95,6 +97,7 @@ export default function ProfileScreen() {
       </div>
 
       {editing && <EditProfileModal profile={profile} onClose={() => setEditing(false)} />}
+      {medicalOpen && <MedicalCardModal onClose={() => setMedicalOpen(false)} />}
       {creatingPost && <CreatePostModal onClose={() => setCreatingPost(false)} />}
       {selectedPost && (
         <PostDetailModal post={selectedPost} canDelete onClose={() => setSelectedPost(null)} />

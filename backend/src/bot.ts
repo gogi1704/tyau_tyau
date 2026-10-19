@@ -76,3 +76,23 @@ export async function sendMatchNotification(telegramId: string, dogName: string,
     console.error("[bot] не удалось отправить уведомление о мэтче:", err);
   }
 }
+
+export async function sendMedicationReminder(
+  telegramId: string,
+  dogName: string,
+  medicationName: string,
+  dosageAmount: number,
+  dosageUnit: string,
+) {
+  if (!bot) return;
+  const unitLabel = dosageUnit === "GRAMS" ? "г" : dosageAmount === 1 ? "таблетка" : "таблетки";
+  try {
+    await bot.api.sendMessage(
+      telegramId,
+      `⏰ Через час приём препарата у ${dogName}: «${medicationName}» — ${dosageAmount} ${unitLabel}`,
+      { reply_markup: openAppKeyboard("Открыть Tyau-Tyau") },
+    );
+  } catch (err) {
+    console.error("[bot] не удалось отправить напоминание о препарате:", err);
+  }
+}

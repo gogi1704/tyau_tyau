@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MoreHorizontal, Pencil } from "lucide-react";
+import { MoreHorizontal, Pencil, Stethoscope } from "lucide-react";
 
-export default function ProfileMenu({ onEdit }: { onEdit: () => void }) {
+export default function ProfileMenu({ onEdit, onMedical }: { onEdit: () => void; onMedical: () => void }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,6 +34,15 @@ export default function ProfileMenu({ onEdit }: { onEdit: () => void }) {
                 className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm font-medium text-ink-700 hover:bg-ink-50 dark:text-ink-100 dark:hover:bg-ink-700"
               >
                 <Pencil size={16} /> Редактировать анкету
+              </button>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  onMedical();
+                }}
+                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm font-medium text-ink-700 hover:bg-ink-50 dark:text-ink-100 dark:hover:bg-ink-700"
+              >
+                <Stethoscope size={16} /> Медицинская карта
               </button>
             </motion.div>
           </>

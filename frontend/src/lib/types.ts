@@ -67,6 +67,18 @@ export type PersonSummary = DogProfile & { isFollowedByMe: boolean };
 
 export type FeedScope = "users" | "groups";
 export type PresenceScope = "friends" | "all";
+export type DosageUnit = "GRAMS" | "TABLETS";
+
+export interface Medication {
+  id: string;
+  name: string;
+  dosageAmount: number;
+  dosageUnit: DosageUnit;
+  frequencyHours: number | null;
+  startAt: string | null;
+  reminderEnabled: boolean;
+  createdAt: string;
+}
 
 export interface PublicProfile {
   dogProfile: DogProfile;

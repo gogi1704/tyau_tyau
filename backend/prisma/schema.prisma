@@ -46,6 +46,24 @@ model DogProfile {
   followers      Follow[]      @relation("FollowingDog")
   createdGroups    Group[]
   groupMemberships GroupMember[]
+  medications      Medication[]
+}
+
+model Medication {
+  id           String     @id @default(cuid())
+  dogProfileId String
+  dogProfile   DogProfile @relation(fields: [dogProfileId], references: [id])
+
+  name           String
+  dosageAmount   Float
+  dosageUnit     String // "GRAMS" | "TABLETS"
+  frequencyHours Int? // периодичность приёма в часах; null — без периодичности
+  startAt        DateTime? // дата и время первого приёма (нужна, если указана периодичность)
+
+  reminderEnabled Boolean   @default(false)
+  nextReminderAt  DateTime? // следующее время отправки напоминания (приём минус 1 час)
+
+  createdAt DateTime @default(now())
 }
 
 model Post {
