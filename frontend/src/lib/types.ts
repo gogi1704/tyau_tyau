@@ -22,6 +22,19 @@ export interface DogProfile {
   ageGroup: AgeGroup;
   district: DistrictCode;
   goal: Goal;
+  // Присутствуют только в /profile/me (собственный профиль) — публичные эндпоинты их не отдают.
+  weightKg?: number | null;
+  heightCm?: number | null;
+  medicalNotes?: string | null;
+}
+
+export type ChatRole = "user" | "assistant";
+
+export interface AiChatMessage {
+  id: string;
+  role: ChatRole;
+  content: string;
+  createdAt: string;
 }
 
 export interface WalkPoint {

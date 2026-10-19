@@ -1,5 +1,6 @@
 import { getInitData } from "./telegram";
 import type {
+  AiChatMessage,
   DogProfile,
   FeedScope,
   Group,
@@ -124,4 +125,12 @@ export const api = {
   }) => request<{ medication: Medication }>("/medications", { method: "POST", body: JSON.stringify(data) }),
 
   deleteMedication: (id: string) => request<{ ok: true }>(`/medications/${id}`, { method: "DELETE" }),
+
+  updateMedicalInfo: (data: { weightKg: number | null; heightCm: number | null; medicalNotes: string | null }) =>
+    request<{ dogProfile: DogProfile }>("/profile/medical", { method: "PATCH", body: JSON.stringify(data) }),
+
+  getAiChat: () => request<{ messages: AiChatMessage[]; enabled: boolean }>("/ai-chat"),
+
+  sendAiChatMessage: (message: string) =>
+    request<{ message: AiChatMessage }>("/ai-chat", { method: "POST", body: JSON.stringify({ message }) }),
 };

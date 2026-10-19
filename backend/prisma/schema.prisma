@@ -34,6 +34,10 @@ model DogProfile {
   goal      String
   createdAt DateTime @default(now())
 
+  weightKg     Float?
+  heightCm     Float?
+  medicalNotes String?
+
   walkSessions   WalkSession[]
   likesGiven     Like[]        @relation("LikesFrom")
   likesReceived  Like[]        @relation("LikesTo")
@@ -47,6 +51,18 @@ model DogProfile {
   createdGroups    Group[]
   groupMemberships GroupMember[]
   medications      Medication[]
+  aiChatMessages   AiChatMessage[]
+}
+
+model AiChatMessage {
+  id           String     @id @default(cuid())
+  dogProfileId String
+  dogProfile   DogProfile @relation(fields: [dogProfileId], references: [id])
+
+  role    String // "user" | "assistant"
+  content String
+
+  createdAt DateTime @default(now())
 }
 
 model Medication {

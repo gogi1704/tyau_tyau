@@ -11,6 +11,7 @@ import PublicProfileScreen from "./screens/PublicProfileScreen";
 import PeopleScreen from "./screens/PeopleScreen";
 import GroupsScreen from "./screens/GroupsScreen";
 import GroupDetailScreen from "./screens/GroupDetailScreen";
+import MedicalCardScreen from "./screens/MedicalCardScreen";
 import BottomNav from "./components/BottomNav";
 import MatchModal from "./components/MatchModal";
 import ThemeToggle from "./components/ThemeToggle";
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="/people" element={<PeopleScreen />} />
           <Route path="/groups" element={<GroupsScreen />} />
           <Route path="/groups/:id" element={<GroupDetailScreen />} />
+          <Route path="/medical-card" element={<MedicalCardScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

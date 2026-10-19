@@ -100,6 +100,24 @@ router.post("/", telegramAuth, upload.single("photo"), async (req, res) => {
   res.json({ dogProfile, created: !existing });
 });
 
+router.patch("/medical", telegramAuth, async (req, res) => {
+  const dog = await getOwnDogProfile(req.telegramUser!.id);
+  if (!dog) return res.status(400).json({ error: "no_profile" });
+
+  const { weightKg, heightCm, medicalNotes } = req.body;
+
+  const dogProfile = await prisma.dogProfile.update({
+    where: { id: dog.id },
+    data: {
+      weightKg: typeof weightKg === "number" && weightKg > 0 ? weightKg : null,
+      heightCm: typeof heightCm === "number" && heightCm > 0 ? heightCm : null,
+      medicalNotes: typeof medicalNotes === "string" && medicalNotes.trim() ? medicalNotes.trim() : null,
+    },
+  });
+
+  res.json({ dogProfile });
+});
+
 router.get("/:dogId", telegramAuth, async (req, res) => {
   const dogProfile = await prisma.dogProfile.findUnique({
     where: { id: req.params.dogId },

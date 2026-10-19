@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, Plus } from "lucide-react";
 import { api } from "../lib/api";
@@ -7,7 +8,6 @@ import DogAvatar from "../components/DogAvatar";
 import ProfileForm from "../components/ProfileForm";
 import ProfileMenu from "../components/ProfileMenu";
 import EditProfileModal from "../components/EditProfileModal";
-import MedicalCardModal from "../components/MedicalCardModal";
 import CreatePostModal from "../components/CreatePostModal";
 import PostCard from "../components/PostCard";
 import PostDetailModal from "../components/PostDetailModal";
@@ -15,12 +15,12 @@ import { districtLabel } from "../data/districts";
 import type { Post } from "../lib/types";
 
 export default function ProfileScreen() {
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery({ queryKey: ["profile", "me"], queryFn: api.getMyProfile });
   const profile = data?.dogProfile ?? null;
   const stats = data?.stats ?? null;
 
   const [editing, setEditing] = useState(false);
-  const [medicalOpen, setMedicalOpen] = useState(false);
   const [creatingPost, setCreatingPost] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
@@ -62,7 +62,7 @@ export default function ProfileScreen() {
             </p>
           </div>
         </div>
-        <ProfileMenu onEdit={() => setEditing(true)} onMedical={() => setMedicalOpen(true)} />
+        <ProfileMenu onEdit={() => setEditing(true)} onMedical={() => navigate("/medical-card")} />
       </div>
 
       {stats && (
@@ -97,7 +97,6 @@ export default function ProfileScreen() {
       </div>
 
       {editing && <EditProfileModal profile={profile} onClose={() => setEditing(false)} />}
-      {medicalOpen && <MedicalCardModal onClose={() => setMedicalOpen(false)} />}
       {creatingPost && <CreatePostModal onClose={() => setCreatingPost(false)} />}
       {selectedPost && (
         <PostDetailModal post={selectedPost} canDelete onClose={() => setSelectedPost(null)} />

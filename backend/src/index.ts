@@ -10,6 +10,7 @@ import postsRouter from "./routes/posts";
 import followRouter from "./routes/follow";
 import groupsRouter from "./routes/groups";
 import medicationsRouter from "./routes/medications";
+import aiChatRouter from "./routes/aiChat";
 import { startBot } from "./bot";
 import { startMedicationReminders } from "./lib/reminders";
 import { UPLOADS_DIR } from "./lib/upload";
@@ -32,6 +33,7 @@ app.use("/api/posts", postsRouter);
 app.use("/api/follow", followRouter);
 app.use("/api/groups", groupsRouter);
 app.use("/api/medications", medicationsRouter);
+app.use("/api/ai-chat", aiChatRouter);
 
 app.listen(PORT, () => {
   console.log(`[server] http://localhost:${PORT}`);
